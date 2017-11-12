@@ -13,7 +13,9 @@ export default {
     posY: Number,
     gZoom: Number,
     prx: Number,
-    pry: Number
+    pry: Number,
+    windowWidth: Number,
+    windowHeight: Number
   },
   data () {
     return {
@@ -29,8 +31,8 @@ export default {
       spx: 0,
       spy: 0,
       spz: 0,
-      ox: 0,
-      oy: 0,
+      // ox: 0, defined in computed
+      // oy: 0, defined in computed
       oz: 0,
       op: 0,
       vx: 3 * Math.PI / 180,
@@ -50,20 +52,13 @@ export default {
     this.spx = this.gZoom * this.px
     this.spy = this.gZoom * this.py
     this.spz = this.gZoom * this.pz
-    this.ox = window.innerWidth / 2
-    this.oy = window.innerHeight / 2
     this.oz = 210
     this.op = 400
-    console.log(this.ox, this.oy)
   },
   mounted: function () {
     this.$parent.$on('enterFrame', this.rotate)
   },
   methods: {
-    mov: function (x, y) {
-      this.top = y
-      this.left = x
-    },
     rot: function () {
       let tempa, tempb
       tempa = this.py * Math.cos(this.vx) - this.pz * Math.sin(this.vx)
@@ -119,6 +114,12 @@ export default {
     }
   },
   computed: {
+    ox: function () {
+      return this.windowWidth / 2
+    },
+    oy: function () {
+      return this.windowHeight / 2
+    },
     styleObject: function () {
       let z = this.spz + this.oz
       return {

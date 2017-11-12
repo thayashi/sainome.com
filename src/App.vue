@@ -13,6 +13,8 @@
           v-bind:pos-x="posX"
           v-bind:pos-y="posY"
           v-bind:g-zoom="gZoom"
+          v-bind:window-width="windowWidth"
+          v-bind:window-height="windowHeight"
           v-bind:prx="grids[i][j][0]"
           v-bind:pry="grids[i][j][1]"
         />
@@ -21,7 +23,7 @@
     <div class="metrics">
       <div>MOUSE X:{{ posX }}</div>
       <div>MOUSE Y:{{ posY }}</div>
-      <div>CSSColor{{ tweenedCSSColor }}</div>
+      <div>Color{{ tweenedCSSColor }}</div>
       <div>Zoom:{{ gZoom }}</div>
     </div>
   </div>
@@ -62,7 +64,9 @@ export default {
       slow: 1.07,
       vx: 0,
       vxPlus: 0.2,
-      grids: []
+      grids: [],
+      windowWidth: 0,
+      windowHeight: 0
     }
   },
   created: function () {
@@ -72,6 +76,8 @@ export default {
       blue: Math.random(),
       alpha: 1
     })
+    this.windowWidth = window.innerWidth
+    this.windowHeight = window.innerHeight
     this.tweenedColor = Object.assign({}, this.color)
     const sep = 35
     const num = 7
@@ -90,6 +96,10 @@ export default {
   mounted: function () {
     console.log('msg is: ' + this.msg)
     requestAnimationFrame(this.enterFrame)
+    window.addEventListener('resize', this.onWindowResize)
+  },
+  beforeDestroy: function () {
+    window.removeEventListener('resize', this.onWindowResize)
   },
   computed: {
     count2: function () {
@@ -142,6 +152,10 @@ export default {
         alpha: 1
       }).toRGB()
       console.log('clicked')
+    },
+    onWindowResize: function (event) {
+      this.windowWidth = window.innerWidth
+      this.windowHeight = window.innerHeight
     }
   },
   watch: {
@@ -223,6 +237,10 @@ html, body {
   bottom: 15px;
   right: 15px;
   opacity: 0.8;
+}
+
+.info a {
+  text-decoration: none;
 }
 
 </style>
